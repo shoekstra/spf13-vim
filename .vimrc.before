@@ -98,6 +98,22 @@
     
 " }
 
+" Use vim-plug instead of Vundler while maintaining compatibility {
+" https://github.com/spf13/spf13-vim/issues/813
+    function! s:deregister(repo)
+        let repo = substitute(a:repo, '[\/]\+$', '', '')
+        let name = fnamemodify(repo, ':t:s?\.git$??')
+        call remove(g:plugs, name)
+        call remove(g:plugs_order, index(g:plugs_order, name))
+    endfunction
+
+    command! -nargs=1 -bar UnPlug call s:deregister(<args>)
+
+    " compatibility with Vundle
+    command! -nargs=+ -bar Bundle call plug#(<args>)
+    command! -nargs=1 -bar UnBundle call s:deregister(<args>)
+" }
+
 " Use fork before if available {
     if filereadable(expand("~/.vimrc.before.fork"))
         source ~/.vimrc.before.fork

@@ -75,7 +75,20 @@
 
 " Use bundles config {
     if filereadable(expand("~/.vimrc.bundles"))
+        if empty(glob('~/.vim/autoload/plug.vim'))
+            silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+            autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+        endif
+
+        if has('nvim')
+            call plug#begin('~/.local/share/nvim/plugged')
+        else
+            call plug#begin('~/.vim/bundle')
+        endif
+
         source ~/.vimrc.bundles
+        call plug#end()
     endif
 " }
 
